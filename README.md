@@ -51,7 +51,7 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 - Django   
 - Django REST Framework  
 - SimpleJWT (for JWT auth)  
-- PostgreSQL / SQLite (configurable)  
+- SQLite  
 
 **Frontend**
 - React   
