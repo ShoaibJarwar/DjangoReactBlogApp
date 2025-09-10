@@ -29,7 +29,7 @@ SECRET_KEY = 'SHilXdAzyuFNFPBtLqyBgxxBM9p08n_jLD7lWRqaW69MS4AhsHhZNVQ0ApagXsvAal
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['djangoreactblogapp-production.up.railway.app']
 
 
 # Application definition
