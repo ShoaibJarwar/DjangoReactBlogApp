@@ -67,11 +67,8 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 ```bash
 # Clone repo
 git clone https://github.com/yourusername/blog-app.git
-cd blog-app/backend
+cd blog-app/blogapi
 
-# Setup virtual environment
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
