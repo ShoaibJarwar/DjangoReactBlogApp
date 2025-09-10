@@ -21,7 +21,7 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 - Track **views, likes, and comment counts**  
 - `liked_by` flag so the frontend knows if the current user liked a post  
 
-### ❤️ Likes
+### ❤️ Likes 
 - Toggle like/unlike a post  
 - Show total `likes_count` per post  
 - `liked_by` updates instantly in the UI  
@@ -38,7 +38,6 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 
 ### 🖥️ Frontend (React)
 - Built with **React + Context API** for auth state  
-- Components:   
 - Integrated with backend via a centralized API layer (`api.js`)  
 - Toast notifications for feedback  
 - Responsive UI  
@@ -48,7 +47,7 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 ## 🛠️ Tech Stack
 
 **Backend**
-- Python  
+- Python   
 - Django  
 - Django REST Framework  
 - SimpleJWT (for JWT auth)  
