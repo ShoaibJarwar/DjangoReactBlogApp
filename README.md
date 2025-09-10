@@ -38,10 +38,7 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 
 ### 🖥️ Frontend (React)
 - Built with **React + Context API** for auth state  
-- Components:  
-  - `Posts.js` → Fetch and list posts with category filtering  
-  - `PostList.js` → Renders list of posts  
-  - `PostItem.js` → Individual post item with likes, comments, edit, and delete  
+- Components:   
 - Integrated with backend via a centralized API layer (`api.js`)  
 - Toast notifications for feedback  
 - Responsive UI  
@@ -51,14 +48,14 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 ## 🛠️ Tech Stack
 
 **Backend**
-- Python 3.11+  
-- Django 5.x  
+- Python  
+- Django  
 - Django REST Framework  
 - SimpleJWT (for JWT auth)  
-- PostgreSQL / SQLite (configurable)  
+- SQLite  
 
 **Frontend**
-- React 18+  
+- React   
 - Context API  
 - Fetch API for requests  
 - React-Toastify for notifications  
@@ -71,11 +68,8 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 ```bash
 # Clone repo
 git clone https://github.com/yourusername/blog-app.git
-cd blog-app/backend
+cd blog-app/blogapi
 
-# Setup virtual environment
-python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -145,4 +139,3 @@ npm start
 
 This project is licensed under the **MIT License**.  
 You are free to **use, modify, and distribute** this project as you wish.  
-
