@@ -31,6 +31,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['djangoreactblogapp-production.up.railway.app']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://djangoreactblogapp-production.up.railway.app',
+    'http://localhost:3000',  # React dev server
+]
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+
 
 # Application definition
 
