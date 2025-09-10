@@ -37,11 +37,7 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 - Category-wise filtering  
 
 ### 🖥️ Frontend (React)
-- Built with **React + Context API** for auth state  
-- Components:  
-  - `Posts.js` → Fetch and list posts with category filtering  
-  - `PostList.js` → Renders list of posts  
-  - `PostItem.js` → Individual post item with likes, comments, edit, and delete  
+- Built with **React + Context API** for auth state 
 - Integrated with backend via a centralized API layer (`api.js`)  
 - Toast notifications for feedback  
 - Responsive UI  
@@ -51,14 +47,14 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 ## 🛠️ Tech Stack
 
 **Backend**
-- Python 3.11+  
-- Django 5.x  
+- Python   
+- Django   
 - Django REST Framework  
 - SimpleJWT (for JWT auth)  
 - PostgreSQL / SQLite (configurable)  
 
 **Frontend**
-- React 18+  
+- React   
 - Context API  
 - Fetch API for requests  
 - React-Toastify for notifications  
