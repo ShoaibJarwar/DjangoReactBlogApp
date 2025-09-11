@@ -1,0 +1,14 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "gunicorn blogapi.wsgi --log-file -"
+  },
+  "volumes": [
+    {
+      "mountPath": "/app/media",
+      "name": "media"
+    }
+  ]
+}
