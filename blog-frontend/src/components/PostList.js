@@ -5,10 +5,12 @@ export default function PostList({
   posts,
   editingPostId,
   editForm,
+  // setEditForm,
   onEditChange,
   onStartEditing,
   onCancelEditing,
   onSaveEdit,
+  handleFileChange,
   onDelete,
   currentUser,
   onPostUpdate,
@@ -32,10 +34,12 @@ export default function PostList({
               post={post}
               isEditing={editingPostId === post.id}
               editForm={editForm}
+              // setEditForm={setEditForm}
               onEditChange={onEditChange}
               onStartEditing={onStartEditing}
               onCancelEditing={onCancelEditing}
               onSaveEdit={onSaveEdit}
+              handleFileChange={handleFileChange}
               onDelete={onDelete}
               currentUser={currentUser}
               onPostUpdate={onPostUpdate}

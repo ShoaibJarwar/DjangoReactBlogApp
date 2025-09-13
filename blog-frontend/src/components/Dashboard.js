@@ -14,6 +14,7 @@ export default function Dashboard({
   onStartEditing,
   onCancelEditing,
   onSaveEdit,
+  handleFileChange,
   onDelete,
   onPostUpdate,
 }) {
@@ -129,6 +130,7 @@ export default function Dashboard({
                   onStartEditing={onStartEditing}
                   onCancelEditing={onCancelEditing}
                   onSaveEdit={onSaveEdit}
+                  handleFileChange={handleFileChange}
                   onDelete={onDelete}
                   currentUser={state.user?.username}
                   onPostUpdate={onPostUpdate}
@@ -158,6 +160,7 @@ export default function Dashboard({
                     onStartEditing={onStartEditing}
                     onCancelEditing={onCancelEditing}
                     onSaveEdit={onSaveEdit}
+                    handleFileChange={handleFileChange}
                     onDelete={onDelete}
                     currentUser={state.user?.username}
                     onPostUpdate={onPostUpdate}

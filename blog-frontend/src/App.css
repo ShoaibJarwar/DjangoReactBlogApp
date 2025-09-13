@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+/* ✅ Carousel responsive fix */
+@media (min-width: 768px) {
+  .carousel-inner {
+    height: 350px !important; /* tablets and up */
+  }
+}
+@media (min-width: 1200px) {
+  .carousel-inner {
+    height: 450px !important; /* desktops */
+  }
+}

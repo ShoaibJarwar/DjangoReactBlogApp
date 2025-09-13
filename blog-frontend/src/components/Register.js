@@ -42,7 +42,7 @@ export default function Register() {
     if (profilePicture) {
       data.append("profile_picture", profilePicture);
     }
-
+  
     try {
       setLoading(true);
       await registerUser(data);
@@ -74,7 +74,7 @@ export default function Register() {
             type="text"
             name="username"
             className="form-control"
-            value={formData.username}
+            value={formData.username} 
             onChange={handleChange}
             required
           />
