@@ -16,7 +16,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 User = get_user_model()
 
 class RegisterView(APIView):
-    parser_classes = [AllowAny]
+    permission_classes = [AllowAny]
     parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
