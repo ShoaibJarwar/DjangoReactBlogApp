@@ -6,6 +6,9 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 from datetime import timedelta
 
 # Load environment variables
@@ -27,7 +30,7 @@ CSRF_TRUSTED_ORIGINS = [
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# Installed Apps
+# Installed Apps 
 INSTALLED_APPS = [
     "corsheaders",
     "posts",
@@ -40,6 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
+    "cloudinary",
+    "cloudinary-storage",
 ]
 
 # Middleware
@@ -94,6 +99,16 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dvevnwbxa',
+    'API_KEY': '497885947883491',
+    'API_SECRET': 'iLUcKtoy1VeGpC0HvSu0fzAFCuQ',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # Static & Media (Production with WhiteNoise)
 STATIC_URL = "/static/"
