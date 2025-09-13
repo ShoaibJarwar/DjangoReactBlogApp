@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Category, Comment
+from .models import Post, Category, Comment, PostImage
 # from django.contrib.auth import get_user_model
 
 # User = get_user_model()
@@ -50,6 +50,12 @@ class CommentSerializer(serializers.ModelSerializer):
     #     comment = Comment.objects.create(author=user, **validated_data)
     #     return comment
 
+class PostImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostImage
+        fields = ["id", "image"]
+        
+
 class PostSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source = "category.name", read_only=True)
     comment_count = serializers.SerializerMethodField(source = "comments.count", read_only=True)
@@ -59,6 +65,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     # category = CategorySerializer(read_only=True)
     comments = CommentSerializer(many=True,read_only=True)
+    images = PostImageSerializer(many=True, read_only=True)
     class Meta:
         model = Post
         # fields = '__all__'
@@ -73,7 +80,7 @@ class PostSerializer(serializers.ModelSerializer):
             "author",
             "category",
             "comments",
-            "image",
+            "images",
             "category_name",
             "comment_count",
             "likes_count",
@@ -87,8 +94,9 @@ class PostSerializer(serializers.ModelSerializer):
     
     def get_liked_by(self, obj):
         request = self.context.get("request")
-        if request:
-            print("DEBUG -> user:", request.user, "likes:", list(obj.likes.values_list("id", flat=True)))
+        # if request:
+        #     print("DEBUG -> user:", request.user, "likes:", list(obj.likes.values_list("id", flat=True)))
         if request and request.user.is_authenticated:
             return obj.likes.filter(pk=request.user.pk).exists()
         return False
+    

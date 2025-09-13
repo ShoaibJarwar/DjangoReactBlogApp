@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django.db.models import Count, Sum, Value
 from django.db.models.functions import Coalesce
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer
-from .models import Post, Category, Comment
+from .models import Post, Category, Comment, PostImage
 
 # User = get_user_model()
  
@@ -43,7 +43,22 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        post = serializer.save(author=self.request.user)
+        
+        for img in self.request.FILES.getlist("images"):
+            PostImage.objects.create(post=post, image=img)
+            
+    def perform_update(self, serializer):
+        post = serializer.save()
+        
+        ids_to_delete = self.request.data.getlist("imagesToDelete")
+        if ids_to_delete:
+            PostImage.objects.filter(id__in=ids_to_delete, post=post).delete()
+
+        # If new images were uploaded in PATCH request
+        if self.request.FILES.getlist("images"):
+            for img in self.request.FILES.getlist("images"):
+                PostImage.objects.create(post=post, image=img)
 
     @action(detail=False, methods=["get"], permission_classes=[permissions.IsAuthenticated])
     def my_posts(self, request):
