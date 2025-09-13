@@ -82,7 +82,7 @@ DATABASES = {
 }
 
 # Password Validators
-AUTH_PASSWORD_VALIDATORS = [ 
+AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
@@ -128,7 +128,7 @@ SIMPLE_JWT = {
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "https://your-netlify-site.netlify.app",  # replace with your Netlify frontend
-    "http://localhost:3000",                 # local React dev
+    "http://localhost:3001",                 # local React dev
 ]
 
 # Custom User Model
