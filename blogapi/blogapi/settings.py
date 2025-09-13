@@ -22,7 +22,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "djangoreactblogapp-production.up.rai
 # CSRF / Cookies Security
 CSRF_TRUSTED_ORIGINS = [
     "https://djangoreactblogapp-production.up.railway.app",
-    "http://localhost:3000",  # React dev server (optional)
+    "http://localhost:3001",  # React dev server (optional)
 ]
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
@@ -82,7 +82,7 @@ DATABASES = {
 }
 
 # Password Validators
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS = [ 
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
