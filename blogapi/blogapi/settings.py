@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "cloudinary",
-    "cloudinary-storage",
+    "cloudinary_storage",
 ]
 
 # Middleware
@@ -107,14 +107,14 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'iLUcKtoy1VeGpC0HvSu0fzAFCuQ',
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage' 
 
 
 # Static & Media (Production with WhiteNoise)
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
+ 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
