@@ -102,17 +102,17 @@ USE_I18N = True
 USE_TZ = True
 
 
-# CLOUDINARY_STORAGE = {
-#     'CLOUD_NAME': 'dvevnwbxa',
-#     'API_KEY': '497885947883491',
-#     'API_SECRET': 'iLUcKtoy1VeGpC0HvSu0fzAFCuQ',
-# }
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dvevnwbxa',
+    'API_KEY': '497885947883491',
+    'API_SECRET': 'iLUcKtoy1VeGpC0HvSu0fzAFCuQ',
+}
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage' 
 
  
 # Static & Media (Production with WhiteNoise)
-MEDIA_URL = "/media/"
+# MEDIA_URL = "/media/"
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
@@ -128,8 +128,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
-}
-
+} 
+ 
 # JWT Config
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
