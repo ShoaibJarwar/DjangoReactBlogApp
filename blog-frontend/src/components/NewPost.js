@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { createPost, getCategories } from "../api";
 import { UseAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
@@ -9,23 +9,35 @@ export default function NewPost({ onPostCreated }) {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [images, setImages] = useState([]);
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     getCategories().then((data) => setCategory(data));
   }, []);
 
+  const handleFileChange = (e) => {
+    setImages([...e.target.files]);
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
-      const postData = {
-        title,
-        content,
-        category: Number(selectedCategory),
-        published: true,
-      };
+      // FormData for sending files + text
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("content", content);
+      formData.append("category", Number(selectedCategory));
+      formData.append("published", true);
 
-      const newPost = await createPost(state.token, postData);
+      images.forEach((file) => {
+        formData.append("images", file); 
+      });
+
+      const newPost = await createPost(state.token, formData);
+      // Pass true if your createPost function handles multipart/form-data
+
       onPostCreated(newPost);
 
       const updatedCategories = await getCategories();
@@ -35,7 +47,13 @@ export default function NewPost({ onPostCreated }) {
       setTitle("");
       setContent("");
       setSelectedCategory("");
+      setImages([]);
+
+      if(fileInputRef.current){
+        fileInputRef.current.value = "";
+      }
     } catch (err) {
+      console.error(err);
       toast.error("Error creating post");
     }
   }
@@ -95,6 +113,35 @@ export default function NewPost({ onPostCreated }) {
                     </option>
                   ))}
               </select>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Images</label>
+              <input
+                type="file"
+                className="form-control"
+                multiple
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              {images.length > 0 && (
+                <div className="mt-2 d-flex flex-wrap gap-2">
+                  {Array.from(images).map((file, idx) => (
+                    <img
+                      key={idx}
+                      src={URL.createObjectURL(file)}
+                      alt="preview"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                        border: "1px solid #ddd",
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             <button type="submit" className="btn btn-success w-100 btn-lg">

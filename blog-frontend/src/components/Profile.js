@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { me } from "../api"; // async function to fetch current user
+import { me } from "../api";
 
 export default function Profile() {
   const [res, setRes] = useState(null);
@@ -44,7 +44,7 @@ export default function Profile() {
         <img
           src={
             res.profile_picture
-              ? `http://127.0.0.1:8000${res.profile_picture}`
+              ? `https://djangoreactblogapp-production.up.railway.app${res.profile_picture}`
               : "https://via.placeholder.com/120?text=User"
           }
           alt={res.username}

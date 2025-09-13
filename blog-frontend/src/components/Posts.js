@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   fetchPosts,
   fetchDashboard,
@@ -19,11 +19,16 @@ import PostEditor from "./PostEditor";
 
 export default function Posts() {
   const { state, dispatch } = UseAuth();
+  const fileInputRef = useRef(null);
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [editingPostId, setEditingPostId] = useState(null);
-  const [editForm, setEditForm] = useState({ title: "", content: "" });
+  const [editForm, setEditForm] = useState({
+    title: "",
+    content: "",
+    images: [],
+  });
   const [loading, setLoading] = useState(true);
   const [myPosts, setMyPosts] = useState([]);
   const [stats, setStats] = useState(null);
@@ -43,15 +48,15 @@ export default function Posts() {
   }
 
   async function loadDashboard() {
-      try {
-        const res = await fetchDashboard(localStorage.getItem("access"));
-        setStats(res.stats);
-        setTopCategories(res.top_categories);
-        setRecentPosts(res.recent_posts);
-      } catch (err) {
-        toast.error("Error loading dashboard");
-      }
+    try {
+      const res = await fetchDashboard(localStorage.getItem("access"));
+      setStats(res.stats);
+      setTopCategories(res.top_categories);
+      setRecentPosts(res.recent_posts);
+    } catch (err) {
+      toast.error("Error loading dashboard");
     }
+  }
 
   const loadMyPosts = async () => {
     try {
@@ -73,9 +78,7 @@ export default function Posts() {
     }
   }
 
-  
-
-  useEffect(() => { 
+  useEffect(() => {
     loadPosts();
     loadDashboard();
     loadMyPosts();
@@ -99,7 +102,12 @@ export default function Posts() {
 
   const startEditing = (post) => {
     setEditingPostId(post.id);
-    setEditForm({ title: post.title, content: post.content });
+    setEditForm({
+      title: post.title,
+      content: post.content && post.content !== "undefined" ? post.content : "",
+      images: [],
+      existingImages: post.images || [],
+    });
     const editModal = new window.bootstrap.Modal(
       document.getElementById("editPostModal")
     );
@@ -108,17 +116,60 @@ export default function Posts() {
 
   const cancelEditing = () => {
     setEditingPostId(null);
-    setEditForm({ title: "", content: "" });
+    setEditForm({ title: "", content: "", images: [] });
+  };
+
+  const handleFileChange = (e) => {
+    // setImages([...e.target.files]);
+    const files = Array.from(e.target.files);
+    console.log("Selected files from file input (should show here):", files);
+
+    setEditForm((prev) => ({
+      ...prev,
+      images: files,
+    }));
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "imagesToDelete") {
+      setEditForm((prev) => ({
+        ...prev,
+        imagesToDelete: [...(prev.imagesToDelete || []), value],
+        existingImages: prev.existingImages.filter((img) => img.id !== value),
+      }));
+    } else {
+      setEditForm((prev) => ({ ...prev, [name]: value }));
+    }
+    if(fileInputRef.current){
+      fileInputRef.current.value = "";
+    }
   };
 
   const saveEdit = async (id) => {
+    const formData = new FormData();
     try {
-      await updatePost(state.token, id, editForm);
+      formData.append("title", editForm.title || "");
+      formData.append("content", editForm.content || "");
+
+      if (editForm.imagesToDelete && editForm.imagesToDelete.length > 0) {
+        editForm.imagesToDelete.forEach((id) => {
+          formData.append("imagesToDelete", id);
+        });
+      }
+
+      if (editForm.images && editForm.images.length > 0) {
+        Array.from(editForm.images).forEach((file) => {
+          formData.append("images", file);
+        });
+      }
+
+      for (let [key, val] of formData.entries()) {
+        console.log("FormData ->", key, val instanceof File ? val.name : val);
+      }
+
+      await updatePost(state.token, id, formData, true);
+      // console.log(formData);
       cancelEditing();
       loadPosts(selectedCategory);
       loadDashboard();
@@ -142,19 +193,18 @@ export default function Posts() {
     }
   };
 
-  // In Posts.js
-const handlePostLikeUpdate = (postId, updatedData) => {
-  setPosts((prev) =>
-    prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p))
-  );
-  setMyPosts((prev) =>
-    prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p))
-  );
-  setRecentPosts((prev) =>
-    prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p))
-  );
-};
-
+  const handlePostLikeUpdate = (postId, updatedData) => {
+    setPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p))
+    );
+    setMyPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p))
+    );
+    setRecentPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, ...updatedData } : p))
+    );
+    loadDashboard();
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("access");
@@ -280,10 +330,12 @@ const handlePostLikeUpdate = (postId, updatedData) => {
                   posts={posts}
                   editingPostId={editingPostId}
                   editForm={editForm}
+                  // setEditForm={setEditForm}
                   onEditChange={handleEditChange}
                   onStartEditing={startEditing}
                   onCancelEditing={cancelEditing}
                   onSaveEdit={saveEdit}
+                  handleFileChange={handleFileChange}
                   onDelete={removePost}
                   currentUser={state.user?.username}
                   onPostUpdate={handlePostLikeUpdate}
@@ -356,6 +408,7 @@ const handlePostLikeUpdate = (postId, updatedData) => {
                 onStartEditing={startEditing}
                 onCancelEditing={cancelEditing}
                 onSaveEdit={saveEdit}
+                handleFileChange={handleFileChange}
                 onDelete={removePost}
                 onPostUpdate={handlePostLikeUpdate}
               />
@@ -418,6 +471,7 @@ const handlePostLikeUpdate = (postId, updatedData) => {
               <PostEditor
                 editForm={editForm}
                 onEditChange={handleEditChange}
+                handleFileChange={handleFileChange}
                 onSave={() => saveEdit(editingPostId)}
                 onCancel={cancelEditing}
               />

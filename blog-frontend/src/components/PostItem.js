@@ -7,10 +7,12 @@ const PostItemComponent = ({
   post,
   isEditing,
   editForm,
+  // setEditForm,
   onEditChange,
   onStartEditing,
   onCancelEditing,
   onSaveEdit,
+  handleFileChange,
   onDelete,
   currentUser,
   onPostUpdate,
@@ -40,7 +42,7 @@ const PostItemComponent = ({
     setLiking(true);
     try {
       const res = await axios.post(
-        `http://127.0.0.1:8000/api/posts/${post.id}/like/`,
+        `https://djangoreactblogapp-production.up.railway.app/api/posts/${post.id}/like/`,
         {},
         {
           headers: {
@@ -70,7 +72,7 @@ const PostItemComponent = ({
       setLoadingComments(true);
       try {
         const res = await axios.get(
-          `http://127.0.0.1:8000/api/comments/?post=${post.id}`,
+          `https://djangoreactblogapp-production.up.railway.app/api/comments/?post=${post.id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -78,7 +80,6 @@ const PostItemComponent = ({
           }
         );
         setComments(res.data);
-        
       } catch (err) {
         toast.error("Error loading comments.");
       } finally {
@@ -95,7 +96,7 @@ const PostItemComponent = ({
     setAddingComment(true);
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/comments/",
+        "https://djangoreactblogapp-production.up.railway.app/api/comments/",
         { post: post.id, text: newComment },
         {
           headers: {
@@ -105,10 +106,10 @@ const PostItemComponent = ({
       );
       setComments([res.data, ...comments]);
       if (onPostUpdate) {
-          onPostUpdate(post.id, {
-            comment_count: (post.comment_count || 0) + 1,
-          });
-        }
+        onPostUpdate(post.id, {
+          comment_count: (post.comment_count || 0) + 1,
+        });
+      }
       setNewComment("");
       toast.success("Comment added!");
     } catch (err) {
@@ -119,19 +120,21 @@ const PostItemComponent = ({
   };
 
   useEffect(() => {
-  setLiked(post.liked_by ?? false);
-  setLikesCount(post.likes_count ?? 0);
-}, [post.liked_by, post.likes_count]);
-
+    setLiked(post.liked_by ?? false);
+    setLikesCount(post.likes_count ?? 0);
+  }, [post.liked_by, post.likes_count]);
 
   return (
     <div className="card shadow-sm mb-4">
       <div className="card-body">
         {isEditing ? (
           <PostEditor
+            post={post}
             editForm={editForm}
+            // setEditForm={setEditForm}
             onEditChange={onEditChange}
             onSave={() => onSaveEdit(post.id)}
+            handleFileChange={handleFileChange}
             onCancel={onCancelEditing}
           />
         ) : (
@@ -141,6 +144,105 @@ const PostItemComponent = ({
             <div className="text-muted mb-2" style={{ fontSize: "0.9rem" }}>
               By <strong>{post.author}</strong> • {timeAgo(post.on_created)}
             </div>
+
+            {post.images && post.images.length > 0 && (
+              <div
+                id={`postCarousel-${post.id}`}
+                className="carousel slide mb-3"
+                data-bs-ride="carousel"
+              >
+                {/* Indicators (dots) */}
+                <div className="carousel-indicators">
+                  {post.images.map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      data-bs-target={`#postCarousel-${post.id}`}
+                      data-bs-slide-to={index}
+                      className={index === 0 ? "active" : ""}
+                      aria-current={index === 0 ? "true" : "false"}
+                      aria-label={`Slide ${index + 1}`}
+                    ></button>
+                  ))}
+                </div>
+
+                {/* Carousel items */}
+                <div
+                  className="carousel-inner rounded shadow-sm"
+                  style={{
+                    height: "350px", // fixed height
+                  }}
+                >
+                  {post.images.map((img, index) => (
+                    <div
+                      key={img.id}
+                      className={`carousel-item text-center ${
+                        index === 0 ? "active" : ""
+                      }`}
+                      style={{
+                        position: "relative",
+                        height: "300px", // fixed container height
+                        width: "100%",
+                        // background: "#f5f5f5", 
+                        overflow: "hidden",
+                      }}
+                    >
+                      <img
+                        src={`${img.image}`}
+                        alt={`${post.title} - ${index + 1}`}
+                        className="d-block w-100 h-100"
+                        style={{
+                          position: "absolute", 
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          maxWidth: "100%",
+                          maxHeight: "100%",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Controls */}
+                {post.images.length > 1 && (
+                  <>
+                    <div style={{position: "absolute", top: "40%", left: "0%"}}>
+                      <button
+                      className="carousel-control-prev bg-dark border border-light rounded-circle d-flex justify-content-center align-items-center p-2"
+                      style={{ width: "30px", height: "30px" }}
+                      type="button"
+                      data-bs-target={`#postCarousel-${post.id}`}
+                      data-bs-slide="prev"
+                    >
+                      <span
+                        className="carousel-control-prev-icon"
+                        aria-hidden="true"
+                      ></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    </div>
+
+                    <div style={{position: "absolute", top: "40%", right: "0%"}}>
+                      <button
+                      className="carousel-control-next bg-dark border border-light rounded-circle d-flex justify-content-center align-items-center p-2"
+                      style={{ width: "30px", height: "30px" }}
+                      type="button"
+                      data-bs-target={`#postCarousel-${post.id}`}
+                      data-bs-slide="next"
+                    >
+                      <span
+                        className="carousel-control-next-icon"
+                        aria-hidden="true"
+                      ></span>
+                      <span className="visually-hidden">Previous</span>
+                    </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Content Preview */}
             <p className="card-text">
@@ -205,7 +307,7 @@ const PostItemComponent = ({
             {showComments && (
               <div className="mt-3">
                 {/* Add Comment */}
-                <form
+                <form 
                   onSubmit={handleAddComment}
                   className="d-flex gap-2 align-items-center"
                 >

@@ -2,17 +2,17 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+  baseURL: "https://djangoreactblogapp-production.up.railway.app/api",
+  // baseURL: "http://127.0.0.1:8000/api",
 });
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://djangoreactblogapp-production.up.railway.app/api";
+// const API_URL = "http://127.0.0.1:8000/api";
 
 export async function registerUser(formData) {
   const res = await API.post("/accounts/signup/", formData, {
     headers: { "content-type": "multipart/form-data" },
   });
-  //   if(!res.ok) toast.error("Registration failed.");
-  //   else toast.success("Registration successful. Please log in.");
   localStorage.setItem("access", res.data.access);
   localStorage.setItem("refresh", res.data.refresh);
   return res.data.user;
@@ -47,33 +47,41 @@ export async function fetchPosts(token, categoryId = null) {
 }
 
 export async function createPost(token, postData) {
-  const res = await fetch(`${API_URL}/posts/`, {
+  const options =  {
     method: "POST",
     headers: {
-      "content-type": "application/json",
+      // "content-type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(postData),
-  });
-  // if(!res.ok) throw new Error("Failed to create Post");
-  // if (!res.ok) toast.error("Failed to create post");
-  // else toast.success("Post created successfully");
+    body: postData,
+  };
+
+  if(!(postData instanceof FormData)){
+    options.headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify(postData);
+  }
+
+  const res = await fetch(`${API_URL}/posts/`, options);
   return res.json();
 }
 
 export async function updatePost(token, id, updatedData) {
-  const res = await fetch(`${API_URL}/posts/${id}/`, {
+  const options = {
     method: "PATCH",
-    headers: {
-      "content-type": "application/json",
-      Authorization: `Bearer ${token}`,
+    headers:{
+      Authorization:`Bearer ${token}`,
     },
-    body: JSON.stringify(updatedData),
-  });
-  // if(!res.ok) throw new Error("Failed to update the post");
-  // if (!res.ok) toast.error("Failed to edit the post");
-  // else toast.success("Post edited successfully");
-  return res.json();
+  };
+
+  if(updatedData instanceof FormData){
+    options.body = updatedData;
+  } else {
+    options.headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify(updatedData);
+  }
+
+  const res = await fetch(`${API_URL}/posts/${id}/`,options);
+  return await res.json();
 }
 
 export async function deletePost(token, id) {
