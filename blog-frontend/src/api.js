@@ -2,12 +2,12 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://djangoreactblogapp-production.up.railway.app/api",
-  // baseURL: "http://127.0.0.1:8000/api",
+  // baseURL: "https://djangoreactblogapp-production.up.railway.app/api",
+  baseURL: "http://127.0.0.1:8000/api",
 });
 
-const API_URL = "https://djangoreactblogapp-production.up.railway.app/api";
-// const API_URL = "http://127.0.0.1:8000/api";
+// const API_URL = "https://djangoreactblogapp-production.up.railway.app/api";
+const API_URL = "http://127.0.0.1:8000/api";
 
 export async function registerUser(formData) {
   const res = await API.post("/accounts/signup/", formData, {
@@ -33,6 +33,23 @@ export const me = async () => {
   return res.data;
 };
 
+export async function updateProfile(token, formData) {
+  const res = await fetch("http://127.0.0.1:8000/api/accounts/me/", {
+    method: "PUT", // or PATCH depending on backend
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // ⚠️ don't set Content-Type when using FormData
+    },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Profile update failed");
+  }
+  return res.json();
+}
+
+
 export async function fetchPosts(token, categoryId = null) {
   let url = `${API_URL}/posts/`;
   if (categoryId) {
@@ -47,7 +64,7 @@ export async function fetchPosts(token, categoryId = null) {
 }
 
 export async function createPost(token, postData) {
-  const options =  {
+  const options = {
     method: "POST",
     headers: {
       // "content-type": "multipart/form-data",
@@ -56,7 +73,7 @@ export async function createPost(token, postData) {
     body: postData,
   };
 
-  if(!(postData instanceof FormData)){
+  if (!(postData instanceof FormData)) {
     options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(postData);
   }
@@ -68,19 +85,19 @@ export async function createPost(token, postData) {
 export async function updatePost(token, id, updatedData) {
   const options = {
     method: "PATCH",
-    headers:{
-      Authorization:`Bearer ${token}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
   };
 
-  if(updatedData instanceof FormData){
+  if (updatedData instanceof FormData) {
     options.body = updatedData;
   } else {
     options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(updatedData);
   }
 
-  const res = await fetch(`${API_URL}/posts/${id}/`,options);
+  const res = await fetch(`${API_URL}/posts/${id}/`, options);
   return await res.json();
 }
 

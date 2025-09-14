@@ -39,7 +39,7 @@ export default function Posts() {
     try {
       const token = localStorage.getItem("access");
       const data = await fetchPosts(token, categoryId);
-      setPosts(data);
+      setPosts(data); 
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -122,7 +122,7 @@ export default function Posts() {
   const handleFileChange = (e) => {
     // setImages([...e.target.files]);
     const files = Array.from(e.target.files);
-    console.log("Selected files from file input (should show here):", files);
+    // console.log("Selected files from file input (should show here):", files);
 
     setEditForm((prev) => ({
       ...prev,

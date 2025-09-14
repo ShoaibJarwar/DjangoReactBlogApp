@@ -42,7 +42,7 @@ const PostItemComponent = ({
     setLiking(true);
     try {
       const res = await axios.post(
-        `https://djangoreactblogapp-production.up.railway.app/api/posts/${post.id}/like/`,
+        `http://127.0.0.1:8000/api/posts/${post.id}/like/`,
         {},
         {
           headers: {
@@ -72,7 +72,7 @@ const PostItemComponent = ({
       setLoadingComments(true);
       try {
         const res = await axios.get(
-          `https://djangoreactblogapp-production.up.railway.app/api/comments/?post=${post.id}`,
+          `http://127.0.0.1:8000/api/comments/?post=${post.id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("access")}`,
@@ -96,7 +96,7 @@ const PostItemComponent = ({
     setAddingComment(true);
     try {
       const res = await axios.post(
-        "https://djangoreactblogapp-production.up.railway.app/api/comments/",
+        "http://127.0.0.1:8000/api/comments/",
         { post: post.id, text: newComment },
         {
           headers: {
