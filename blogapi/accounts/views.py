@@ -14,7 +14,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 # Create your views here.
 
 User = get_user_model()
-
+ 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     parser_classes = [MultiPartParser, FormParser]
