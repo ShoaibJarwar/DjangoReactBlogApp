@@ -146,4 +146,4 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # Custom User Model
-AUTH_USER_MODEL = "accounts.CustomUser"
+AUTH_USER_MODEL = "accounts.CustomUser" 
