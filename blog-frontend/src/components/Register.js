@@ -36,7 +36,7 @@ export default function Register() {
     }
 
     const data = new FormData();
-    Object.keys(formData).forEach((key) => {
+    Object.keys(formData).forEach((key) => { 
       data.append(key, formData[key]);
     });
     if (profilePicture) {
