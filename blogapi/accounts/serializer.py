@@ -10,10 +10,13 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     # password2 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     # profile_picture = serializers.SerializerMethodField()
+    profile_picture = serializers.ImageField(required=False)
     class Meta:
         model = User
         fields = ("id", "username", "email", "first_name", "last_name", "bio", "profile_picture")
-
+        extra_kwargs = {
+            "bio": {"required": False, "allow_blank": True},
+        }
     # def get_profile_picture(self, obj):
     #     request = self.context.get("request")
     #     if obj.profile_picture and hasattr(obj.profile_picture, 'url'):

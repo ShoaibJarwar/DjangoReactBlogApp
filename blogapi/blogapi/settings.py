@@ -113,7 +113,7 @@ SIMPLE_JWT = {
 
 # CORS (development only)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React dev
+    "http://localhost:3001",  # React dev
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
