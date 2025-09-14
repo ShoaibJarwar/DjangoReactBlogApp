@@ -44,6 +44,29 @@ class MeView(APIView):
     def get(self, request):
         return Response(UserSerializer(request.user).data)
     
+    def put(self, request):
+        serializer = UserSerializer(
+            request.user,
+            data=request.data,
+            partial=True,
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request):
+        serializer = UserSerializer(
+            request.user,
+            data={**request.data},
+            # files=request.FILES,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -72,5 +95,18 @@ class ProfileView(APIView):
             "bio": user.bio,
             "profile_picture": request.build_absolute_uri(user.profile_picture.url) if user.profile_picture else None,
         }
-
         return Response(data)
+    
+    def put(self, request):
+        serializer = UserSerializer(request.user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
