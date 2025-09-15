@@ -43,7 +43,7 @@ class MeView(APIView):
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
-    
+     
     def put(self, request):
         serializer = UserSerializer(
             request.user,
@@ -55,8 +55,8 @@ class MeView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def patch(self, request):
-        serializer = UserSerializer(
+    def patch(self, request): 
+        serializer = UserSerializer( 
             request.user,
             data={**request.data},
             # files=request.FILES,
