@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { getCategories } from "../api";
 import { UseAuth } from "../context/AuthContext";
+import AITextGenerator from "./AITextGenerator";
 import { toast } from "react-toastify";
 
 // CKEditor imports
@@ -16,6 +17,11 @@ export default function NewPost({ onPostCreated }) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
+
+  const insertGeneratedText = (text) => {
+    // Example: insert into your CKEditor state or textarea
+    console.log("Generated text:", text);
+  };
 
   useEffect(() => {
     getCategories().then((data) => setCategory(data));
@@ -81,6 +87,17 @@ export default function NewPost({ onPostCreated }) {
           <h3 className="card-title mb-4 text-primary">
             <i className="bi bi-plus-circle me-2"></i> Create New Post
           </h3>
+          <div>
+            <button
+              className="btn btn-outline-secondary mb-3"
+              data-bs-toggle="modal"
+              data-bs-target="#aiGeneratorModal"
+            >
+              ✨ AI Post Generator
+            </button>
+
+            <AITextGenerator token={state.token} onInsert={insertGeneratedText} />
+          </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Title</label>

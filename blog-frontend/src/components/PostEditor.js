@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import AITextGenerator from "./AITextGenerator";
+import { UseAuth } from "../context/AuthContext"
 
 // Custom Upload Adapter
 // class CustomUploadAdapter {
@@ -46,6 +48,12 @@ export default function PostEditor({
   onCancel,
 }) {
   const [content, setContent] = useState("");
+  const { state } = UseAuth();
+
+  const insertGeneratedText = (text) => { 
+    // Example: insert into your CKEditor state or textarea
+    console.log("Generated text:", text);
+  };
 
   // Initialize CKEditor content from editForm.content
   useEffect(() => {
@@ -62,6 +70,17 @@ export default function PostEditor({
         <h5 className="card-title text-primary mb-3">
           <i className="bi bi-pencil-square me-2"></i> Edit Post
         </h5>
+        <div>
+          <button
+            className="btn btn-outline-secondary mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#aiGeneratorModal"
+          >
+            ✨ AI Post Generator
+          </button>
+
+          <AITextGenerator token={state.token} onInsert={insertGeneratedText} />
+        </div>
 
         {/* Title */}
         <div className="mb-3">
