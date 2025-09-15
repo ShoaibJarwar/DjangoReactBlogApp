@@ -1,20 +1,43 @@
 from django.shortcuts import render
 # from django.contrib.auth import get_user_model 
+import os
+from openai import OpenAI
+from dotenv import load_dotenv
 from rest_framework import viewsets, generics, permissions, status 
 from rest_framework.views import APIView
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
-# from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count, Sum, Value
 from django.db.models.functions import Coalesce
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer
 from .models import Post, Category, Comment, PostImage
 
-# User = get_user_model()
- 
-# class RegisterView(generics.CreateAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = RegisterSerializer
+load_dotenv()
+client = OpenAI(api_key = os.getenv("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"))
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def generate_post(request):
+    prompt = request.data.get("prompt", "")
+
+    if not prompt:
+        return Response({"error": "Prompt is required"}, status=400)
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # you can switch to gpt-4 or gpt-3.5
+            messages=[
+                {"role": "system", "content": "You are a helpful AI that writes blog posts."},
+                {"role": "user", "content": prompt},
+            ],
+            max_tokens=500,
+            temperature=0.7,
+        )
+        content = response.choices[0].message.content
+        return Response({"generated_text": content})
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
 
 class IsAuthorOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):

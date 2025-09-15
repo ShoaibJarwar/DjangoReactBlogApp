@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PostViewSet, CategoryViewSet, DashboardView, CommentViewSet
+from .views import PostViewSet, CategoryViewSet, DashboardView, CommentViewSet, generate_post
 # from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
@@ -15,4 +15,5 @@ urlpatterns = [
     # path('auth/login', TokenObtainPairView.as_view(), name="token-obtain-pair"),
     # path('auth/refresh', TokenRefreshView.as_view(), name="token-refresh"),
     path('dashboard/',DashboardView.as_view(), name="dashboard"),
+    path('ai/generate/', generate_post, name="ai-generate" ),
 ]
