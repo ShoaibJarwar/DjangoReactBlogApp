@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Posts from "./components/Posts";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Header from "../src/components/Header"; 
+import Footer from "../src/components/Footer";
 import { UseAuth } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -45,6 +47,8 @@ function App() {
 
       {/* Routes */}
       <div className="container">
+        <Header />
+
         <Routes>
           <Route
             path="/"
@@ -61,6 +65,7 @@ function App() {
           {/* Fallback route */}
           <Route path="*" element={<p>Page not found</p>} />
         </Routes>
+        <Footer />
       </div>
 
       <ToastContainer position="top-right" autoClose={3000} />

@@ -12,13 +12,13 @@ import CategoryFilter from "./CategoryFilter";
 import PostList from "./PostList";
 import { UseAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Profile from "./Profile";
 import PostEditor from "./PostEditor";
 
 export default function Posts() {
-  const { state, dispatch } = UseAuth();
+  const { state } = UseAuth();
   const fileInputRef = useRef(null);
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -104,7 +104,7 @@ export default function Posts() {
     setEditingPostId(post.id);
     setEditForm({
       title: post.title,
-      content: post.content && post.content !== "undefined" ? post.content : "",
+      content: post.content,
       images: [],
       existingImages: post.images || [],
     });
@@ -206,91 +206,10 @@ export default function Posts() {
     loadDashboard();
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("access");
-    dispatch({ type: "LOGOUT" });
-    toast.info("You have been logged out.");
-  };
-
   if (loading) return <p>Loading Posts...</p>;
 
   return (
     <>
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
-        <div className="container-fluid">
-          <span
-            className="navbar-brand fw-bold"
-            style={{ color: "#f8d210", fontSize: "1.3rem" }}
-          >
-            🚀 Blog Post App
-          </span>
-
-          {/* Toggle button for mobile */}
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarMenu"
-            aria-controls="navbarMenu"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div className="collapse navbar-collapse" id="navbarMenu">
-            <div className="ms-auto d-flex flex-column flex-lg-row gap-2">
-              {state.user ? (
-                <>
-                  <button
-                    className="btn btn-outline-light btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#dashboardModal"
-                  >
-                    📊 Dashboard
-                  </button>
-                  <button
-                    className="btn btn-outline-light btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#profileModal"
-                  >
-                    👤 Profile
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={handleLogout}
-                  >
-                    🚪 Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link className="btn btn-sm btn-outline-light" to="/login">
-                    Login
-                  </Link>
-                  <Link className="btn btn-sm btn-primary" to="/register">
-                    Register
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Info Banner */}
-      <div
-        className="text-center text-white py-2 px-3"
-        style={{
-          background: "linear-gradient(90deg, #007bff, #6610f2)",
-          fontSize: "0.95rem",
-        }}
-      >
-        Welcome, <strong>{state.user?.username || "Guest"}</strong>! 🚀 Manage
-        your posts, explore categories, and customize your profile.
-      </div>
-
       <div className="container-fluid py-4">
         <div className="row">
           {/* Sidebar */}
@@ -346,8 +265,6 @@ export default function Posts() {
         </div>
       </div>
 
-      {/* Modals (unchanged except styling is already responsive in Bootstrap) */}
-      {/* New Post Modal */}
       <div
         className="modal fade"
         id="newPostModal"
