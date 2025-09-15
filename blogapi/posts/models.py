@@ -1,14 +1,18 @@
 # from django.contrib.auth.models import AbstractUser
+import bleach
 from django.db import models
 from django.conf import settings
 
 # Create your models here.
 
-# class User(AbstractUser):
-#     bio = models.TextField(blank=True, null=True)
-
-#     def __str__(self):
-#         return self.username
+ALLOWED_TAGS = [
+    'p', 'b', 'i', 'u', 'em', 'strong', 'a',
+    'ul', 'ol', 'li', 'br', 'span', 'blockquote'
+]
+ALLOWED_ATTRIBUTES = {
+    'a': ['href', 'title', 'target'],
+    'span': ['style']
+}
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)

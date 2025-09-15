@@ -50,7 +50,7 @@ class PostViewSet(viewsets.ModelViewSet):
             
     def perform_update(self, serializer):
         post = serializer.save()
-        
+         
         ids_to_delete = self.request.data.getlist("imagesToDelete")
         if ids_to_delete:
             PostImage.objects.filter(id__in=ids_to_delete, post=post).delete()
