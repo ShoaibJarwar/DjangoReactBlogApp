@@ -14,7 +14,7 @@ from .serializers import PostSerializer, CategorySerializer, CommentSerializer
 from .models import Post, Category, Comment, PostImage
 
 load_dotenv()
-client = OpenAI(api_key = os.getenv("OpenAI_API_Key"))
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
