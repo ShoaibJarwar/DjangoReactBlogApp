@@ -16,7 +16,7 @@ export default function NewPost({ onPostCreated }) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
- 
+
   useEffect(() => {
     getCategories().then((data) => setCategory(data));
   }, []);
