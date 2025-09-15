@@ -183,7 +183,7 @@ const PostItemComponent = ({
                         position: "relative",
                         height: "300px", // fixed container height
                         width: "100%",
-                        // background: "#f5f5f5", 
+                        // background: "#f5f5f5",
                         overflow: "hidden",
                       }}
                     >
@@ -192,7 +192,7 @@ const PostItemComponent = ({
                         alt={`${post.title} - ${index + 1}`}
                         className="d-block w-100 h-100"
                         style={{
-                          position: "absolute", 
+                          position: "absolute",
                           top: "50%",
                           left: "50%",
                           transform: "translate(-50%, -50%)",
@@ -208,36 +208,40 @@ const PostItemComponent = ({
                 {/* Controls */}
                 {post.images.length > 1 && (
                   <>
-                    <div style={{position: "absolute", top: "40%", left: "0%"}}>
-                      <button
-                      className="carousel-control-prev bg-dark border border-light rounded-circle d-flex justify-content-center align-items-center p-2"
-                      style={{ width: "30px", height: "30px" }}
-                      type="button"
-                      data-bs-target={`#postCarousel-${post.id}`}
-                      data-bs-slide="prev"
+                    <div
+                      style={{ position: "absolute", top: "40%", left: "0%" }}
                     >
-                      <span
-                        className="carousel-control-prev-icon"
-                        aria-hidden="true"
-                      ></span>
-                      <span className="visually-hidden">Previous</span>
-                    </button>
+                      <button
+                        className="carousel-control-prev bg-dark border border-light rounded-circle d-flex justify-content-center align-items-center p-2"
+                        style={{ width: "30px", height: "30px" }}
+                        type="button"
+                        data-bs-target={`#postCarousel-${post.id}`}
+                        data-bs-slide="prev"
+                      >
+                        <span
+                          className="carousel-control-prev-icon"
+                          aria-hidden="true"
+                        ></span>
+                        <span className="visually-hidden">Previous</span>
+                      </button>
                     </div>
 
-                    <div style={{position: "absolute", top: "40%", right: "0%"}}>
-                      <button
-                      className="carousel-control-next bg-dark border border-light rounded-circle d-flex justify-content-center align-items-center p-2"
-                      style={{ width: "30px", height: "30px" }}
-                      type="button"
-                      data-bs-target={`#postCarousel-${post.id}`}
-                      data-bs-slide="next"
+                    <div
+                      style={{ position: "absolute", top: "40%", right: "0%" }}
                     >
-                      <span
-                        className="carousel-control-next-icon"
-                        aria-hidden="true"
-                      ></span>
-                      <span className="visually-hidden">Previous</span>
-                    </button>
+                      <button
+                        className="carousel-control-next bg-dark border border-light rounded-circle d-flex justify-content-center align-items-center p-2"
+                        style={{ width: "30px", height: "30px" }}
+                        type="button"
+                        data-bs-target={`#postCarousel-${post.id}`}
+                        data-bs-slide="next"
+                      >
+                        <span
+                          className="carousel-control-next-icon"
+                          aria-hidden="true"
+                        ></span>
+                        <span className="visually-hidden">Previous</span>
+                      </button>
                     </div>
                   </>
                 )}
@@ -245,11 +249,15 @@ const PostItemComponent = ({
             )}
 
             {/* Content Preview */}
-            <p className="card-text">
-              {post.content.length > 120
-                ? post.content.substring(0, 120) + "..."
-                : post.content}
-            </p>
+            <div
+              className="card-text"
+              dangerouslySetInnerHTML={{
+                __html:
+                  post.content.length > 120
+                    ? post.content.substring(0, 120) + "..."
+                    : post.content,
+              }}
+            />
 
             {/* Meta Info */}
             <div className="d-flex justify-content-between align-items-center mb-2">
@@ -307,7 +315,7 @@ const PostItemComponent = ({
             {showComments && (
               <div className="mt-3">
                 {/* Add Comment */}
-                <form 
+                <form
                   onSubmit={handleAddComment}
                   className="d-flex gap-2 align-items-center"
                 >

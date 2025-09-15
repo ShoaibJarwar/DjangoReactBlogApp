@@ -1,13 +1,61 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+// Custom Upload Adapter
+// class CustomUploadAdapter {
+//   constructor(loader, token) {
+//     this.loader = loader;
+//     this.token = token;
+//   }
+
+//   upload() {
+//     return this.loader.file.then(
+//       (file) =>
+//         new Promise((resolve, reject) => {
+//           const data = new FormData();
+//           data.append("upload", file);
+
+//           fetch("http://127.0.0.1:8000/api/upload/", {
+//             method: "POST",
+//             headers: {
+//               Authorization: `Bearer ${this.token}`,
+//             },
+//             body: data,
+//           })
+//             .then((res) => res.json())
+//             .then((result) => resolve({ default: result.url }))
+//             .catch((err) => reject(err));
+//         })
+//     );
+//   }
+
+//   abort() {}
+// }
+
+// function CustomUploadPlugin(editor, token) {
+//   editor.plugins.get("FileRepository").createUploadAdapter = (loader) =>
+//     new CustomUploadAdapter(loader, token);
+// }
 
 export default function PostEditor({
   editForm,
   onEditChange,
   onSave,
   handleFileChange,
-  onCancel, 
+  onCancel,
 }) {
-  
+  const [content, setContent] = useState("");
+
+  // Initialize CKEditor content from editForm.content
+  useEffect(() => {
+    if (editForm?.content) {
+      setContent(editForm.content);
+    }
+  }, [editForm?.content]);
+
+  if (!editForm) return null;
+
   return (
     <div className="card shadow-sm border-0 rounded-3 my-3">
       <div className="card-body">
@@ -22,37 +70,50 @@ export default function PostEditor({
             type="text"
             className="form-control"
             name="title"
-            value={editForm.title}
+            value={editForm.title || ""}
             onChange={onEditChange}
             placeholder="Edit title"
             required
           />
         </div>
 
-        {/* Content */}
+        {/* Content with CKEditor */}
         <div className="mb-3">
           <label className="form-label">Content</label>
-          <textarea
-            className="form-control"
-            name="content"
-            value={editForm.content}
-            onChange={onEditChange}
-            placeholder="Edit content..."
-            rows={5}
-            required
+          <CKEditor
+            key={editForm.id || "editor"}
+            editor={ClassicEditor}
+            data={content}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              setContent(data);
+              onEditChange({ target: { name: "content", value: data } });
+            }}
+            config={{
+              // extraPlugins: [(editor) => CustomUploadPlugin(editor, token)],
+              toolbar: [
+                "heading",
+                "|",
+                "bold",
+                "italic",
+                "bulletedList",
+                "numberedList",
+                "blockQuote",
+                "insertTable",
+                "undo",
+                "redo",
+              ],
+            }}
           />
         </div>
 
-        {/*Existing Images*/}
+        {/* Existing Images */}
         {editForm.existingImages && editForm.existingImages.length > 0 && (
           <div className="mt-2 d-flex flex-wrap gap-2">
             {editForm.existingImages.map((img) => (
               <div
                 key={img.id}
-                style={{
-                  position: "relative",
-                  display: "inline-block",
-                }}
+                style={{ position: "relative", display: "inline-block" }}
               >
                 <img
                   src={img.image}
@@ -65,15 +126,11 @@ export default function PostEditor({
                     border: "1px solid #ddd",
                   }}
                 />
-                {/* X button */}
                 <button
                   type="button"
                   onClick={() =>
                     onEditChange({
-                      target: {
-                        name: "imagesToDelete",
-                        value: img.id,
-                      },
+                      target: { name: "imagesToDelete", value: img.id },
                     })
                   }
                   style={{
@@ -98,7 +155,7 @@ export default function PostEditor({
           </div>
         )}
 
-        {/*Images*/}
+        {/* New Images */}
         <div className="mb-3">
           <label className="form-label">Images</label>
           <input

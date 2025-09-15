@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { createPost, getCategories } from "../api";
+import axios from "axios";
+import { getCategories } from "../api";
 import { UseAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+
+// CKEditor imports
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 export default function NewPost({ onPostCreated }) {
   const { state } = UseAuth();
@@ -10,8 +15,8 @@ export default function NewPost({ onPostCreated }) {
   const [category, setCategory] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [images, setImages] = useState([]);
-  const fileInputRef = useRef(null)
-
+  const fileInputRef = useRef(null);
+ 
   useEffect(() => {
     getCategories().then((data) => setCategory(data));
   }, []);
@@ -24,24 +29,28 @@ export default function NewPost({ onPostCreated }) {
     e.preventDefault();
 
     try {
-      // FormData for sending files + text
       const formData = new FormData();
       formData.append("title", title);
-      formData.append("content", content);
+      formData.append("content", content); // <-- HTML string from CKEditor
       formData.append("category", Number(selectedCategory));
       formData.append("published", true);
 
       images.forEach((file) => {
-        formData.append("images", file); 
+        formData.append("images", file);
       });
 
-      const newPost = await createPost(state.token, formData);
-      // Pass true if your createPost function handles multipart/form-data
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/posts/",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      onPostCreated(newPost);
-
-      const updatedCategories = await getCategories();
-      setCategory(updatedCategories);
+      onPostCreated(res.data);
 
       toast.success("Post created successfully!");
       setTitle("");
@@ -49,11 +58,11 @@ export default function NewPost({ onPostCreated }) {
       setSelectedCategory("");
       setImages([]);
 
-      if(fileInputRef.current){
+      if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     } catch (err) {
-      console.error(err);
+      console.error(err.response?.data || err.message);
       toast.error("Error creating post");
     }
   }
@@ -87,13 +96,28 @@ export default function NewPost({ onPostCreated }) {
 
             <div className="mb-3">
               <label className="form-label">Content</label>
-              <textarea
-                className="form-control"
-                placeholder="Write your content here..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                rows={5}
-                required
+              <CKEditor
+                editor={ClassicEditor}
+                data={content}
+                config={{
+                  toolbar: [
+                    "heading",
+                    "|",
+                    "bold",
+                    "italic",
+                    "link",
+                    "bulletedList",
+                    "numberedList",
+                    "blockQuote",
+                    "insertTable",
+                    "undo",
+                    "redo",
+                  ],
+                }}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  setContent(data);
+                }}
               />
             </div>
 
@@ -123,6 +147,7 @@ export default function NewPost({ onPostCreated }) {
                 multiple
                 accept="image/*"
                 onChange={handleFileChange}
+                ref={fileInputRef}
               />
               {images.length > 0 && (
                 <div className="mt-2 d-flex flex-wrap gap-2">

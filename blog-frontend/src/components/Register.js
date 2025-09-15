@@ -151,8 +151,13 @@ export default function Register() {
           disabled={loading}
         >
           {loading ? "Registering..." : "Register"}
-        </button>
+        </button> 
       </form>
+      <div className="text-center mt-3">
+            <small className="text-muted">
+              Already have an account? <a href="/login">Login</a>
+            </small>
+          </div>
     </div>
   );
 }
