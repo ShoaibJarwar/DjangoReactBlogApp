@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-export default function NewPost({ onPostCreated }) {
+export default function NewPost({ onPostCreated, onEditChange }) {
   const { state } = UseAuth();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -19,9 +19,11 @@ export default function NewPost({ onPostCreated }) {
   const fileInputRef = useRef(null);
 
   const insertGeneratedText = (text) => {
-    // Example: insert into your CKEditor state or textarea
-    console.log("Generated text:", text);
-  };
+  const newContent = content + "<p>" + text + "</p>";
+  setContent(newContent);
+  onEditChange({ target: { name: "content", value: newContent } });
+};
+
 
   useEffect(() => {
     getCategories().then((data) => setCategory(data));
@@ -88,16 +90,16 @@ export default function NewPost({ onPostCreated }) {
             <i className="bi bi-plus-circle me-2"></i> Create New Post
           </h3>
           <div>
-            <button
-              className="btn btn-outline-secondary mb-3"
-              data-bs-toggle="modal"
-              data-bs-target="#aiGeneratorModal"
-            >
-              ✨ AI Post Generator
-            </button>
-
-            <AITextGenerator token={state.token} onInsert={insertGeneratedText} />
-          </div>
+          <button
+            className="btn btn-outline-secondary mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#aiGeneratorModal"
+          >
+            ✨ AI Post Generator
+          </button>
+          <AITextGenerator token={state.token} onInsert={insertGeneratedText} />
+        </div>
+          
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Title</label>

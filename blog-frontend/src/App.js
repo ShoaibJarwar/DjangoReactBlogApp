@@ -5,10 +5,11 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Header from "../src/components/Header"; 
 import Footer from "../src/components/Footer";
+// import AITextGenerator from "./components/AITextGenerator";
 import { UseAuth } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
- 
+
 function App() {
   const { state } = UseAuth();
 
@@ -48,7 +49,7 @@ function App() {
       {/* Routes */}
       <div className="container">
         <Header />
-
+        {/* <AITextGenerator token={state.token} onInsert={insertGeneratedText} /> */}
         <Routes>
           <Route
             path="/"

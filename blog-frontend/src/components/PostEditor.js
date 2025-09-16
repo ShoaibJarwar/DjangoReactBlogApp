@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import AITextGenerator from "./AITextGenerator";
-import { UseAuth } from "../context/AuthContext"
+import { UseAuth } from "../context/AuthContext";
 
 // Custom Upload Adapter
 // class CustomUploadAdapter {
@@ -50,9 +50,10 @@ export default function PostEditor({
   const [content, setContent] = useState("");
   const { state } = UseAuth();
 
-  const insertGeneratedText = (text) => { 
-    // Example: insert into your CKEditor state or textarea
-    console.log("Generated text:", text);
+  const insertGeneratedText = (text) => {
+    const newContent = content + "<p>" + text + "</p>";
+    setContent(newContent);
+    onEditChange({ target: { name: "content", value: newContent } });
   };
 
   // Initialize CKEditor content from editForm.content
@@ -78,7 +79,6 @@ export default function PostEditor({
           >
             ✨ AI Post Generator
           </button>
-
           <AITextGenerator token={state.token} onInsert={insertGeneratedText} />
         </div>
 

@@ -30,6 +30,10 @@ function AITextGenerator({ token, onInsert }) {
     setLoading(false);
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generated);
+  };
+
   return (
     <div
       className="modal fade"
@@ -42,7 +46,7 @@ function AITextGenerator({ token, onInsert }) {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="aiGeneratorModalLabel">
-              AI Post Generator
+              ✨ AI Post Generator
             </h5>
             <button
               type="button"
@@ -70,14 +74,23 @@ function AITextGenerator({ token, onInsert }) {
             {generated && (
               <div className="border p-3 rounded bg-light">
                 <h6>Generated Draft:</h6>
-                <p>{generated}</p>
-                <button
-                  className="btn btn-success btn-sm mt-2"
-                  onClick={() => onInsert(generated)}
-                  data-bs-dismiss="modal"
-                >
-                  Insert into Editor
-                </button>
+                <pre style={{ whiteSpace: "pre-wrap" }}>{generated}</pre>
+
+                <div className="d-flex gap-2 mt-2">
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={copyToClipboard}
+                  >
+                    Copy
+                  </button>
+                  <button
+                    className="btn btn-success btn-sm"
+                    onClick={() => onInsert(generated)}
+                    data-bs-dismiss="modal"
+                  >
+                    Insert into Editor
+                  </button>
+                </div>
               </div>
             )}
           </div>

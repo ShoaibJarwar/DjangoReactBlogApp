@@ -286,7 +286,7 @@ export default function Posts() {
               ></button>
             </div>
             <div className="modal-body">
-              <NewPost onPostCreated={handlePostCreated} />
+              <NewPost onPostCreated={handlePostCreated} onEditChange={handleEditChange} />
             </div>
           </div>
         </div>
