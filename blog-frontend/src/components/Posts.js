@@ -164,9 +164,9 @@ export default function Posts() {
         });
       }
 
-      for (let [key, val] of formData.entries()) {
-        console.log("FormData ->", key, val instanceof File ? val.name : val);
-      }
+      // for (let [key, val] of formData.entries()) {
+      //   console.log("FormData ->", key, val instanceof File ? val.name : val);
+      // }
 
       await updatePost(state.token, id, formData, true);
       // console.log(formData);

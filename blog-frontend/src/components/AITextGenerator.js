@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { marked } from "marked";
 
 function AITextGenerator({ token, onInsert }) {
   const [prompt, setPrompt] = useState("");
@@ -73,9 +74,15 @@ function AITextGenerator({ token, onInsert }) {
 
             {generated && (
               <div className="border p-3 rounded bg-light">
-                <h6>Generated Draft:</h6>
-                <pre style={{ whiteSpace: "pre-wrap" }}>{generated}</pre>
+                <h6>Generated Content:</h6>
 
+                {/* Render AI HTML output */}
+                <div
+                  className="ai-generated-content"
+                  dangerouslySetInnerHTML={{ __html: marked(generated) }}
+                />
+
+                {/* Buttons must be outside dangerouslySetInnerHTML */}
                 <div className="d-flex gap-2 mt-2">
                   <button
                     className="btn btn-outline-primary btn-sm"
@@ -85,7 +92,7 @@ function AITextGenerator({ token, onInsert }) {
                   </button>
                   <button
                     className="btn btn-success btn-sm"
-                    onClick={() => onInsert(generated)}
+                    onClick={() => onInsert(marked(generated))}
                     data-bs-dismiss="modal"
                   >
                     Insert into Editor
@@ -99,5 +106,4 @@ function AITextGenerator({ token, onInsert }) {
     </div>
   );
 }
-
 export default AITextGenerator;

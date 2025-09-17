@@ -4,12 +4,10 @@ import { getCategories } from "../api";
 import { UseAuth } from "../context/AuthContext";
 import AITextGenerator from "./AITextGenerator";
 import { toast } from "react-toastify";
-
-// CKEditor imports
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-export default function NewPost({ onPostCreated, onEditChange }) {
+export default function NewPost({ onPostCreated }) {
   const { state } = UseAuth();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -17,13 +15,13 @@ export default function NewPost({ onPostCreated, onEditChange }) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
+  const editorRef = useRef(null);
 
-  const insertGeneratedText = (text) => {
-  const newContent = content + "<p>" + text + "</p>";
-  setContent(newContent);
-  onEditChange({ target: { name: "content", value: newContent } });
-};
-
+  // const insertGeneratedText = (text) => {
+  //   const newContent = content + "<p>" + text + "</p>";
+  //   setContent(newContent);
+  //   onEditChange({ target: { name: "content", value: newContent } });
+  // };
 
   useEffect(() => {
     getCategories().then((data) => setCategory(data));
@@ -33,13 +31,27 @@ export default function NewPost({ onPostCreated, onEditChange }) {
     setImages([...e.target.files]);
   };
 
+  const insertAIText = (text) => {
+    if (editorRef.current) {
+      const editor = editorRef.current;
+      editor.model.change((writer) => {
+        const insertPosition = editor.model.document.selection.getFirstPosition();
+        writer.insertText(text, insertPosition);
+      });
+      setContent(editor.getData());
+    } else {
+      setContent((prev) => prev + "\n" + text);
+    }
+  };
+
+
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
       const formData = new FormData();
       formData.append("title", title);
-      formData.append("content", content); // <-- HTML string from CKEditor
+      formData.append("content", content);
       formData.append("category", Number(selectedCategory));
       formData.append("published", true);
 
@@ -90,16 +102,19 @@ export default function NewPost({ onPostCreated, onEditChange }) {
             <i className="bi bi-plus-circle me-2"></i> Create New Post
           </h3>
           <div>
-          <button
-            className="btn btn-outline-secondary mb-3"
-            data-bs-toggle="modal"
-            data-bs-target="#aiGeneratorModal"
-          >
-            ✨ AI Post Generator
-          </button>
-          <AITextGenerator token={state.token} onInsert={insertGeneratedText} />
-        </div>
-          
+            <button
+              className="btn btn-outline-secondary mb-3"
+              data-bs-toggle="modal"
+              data-bs-target="#aiGeneratorModal"
+            >
+              ✨ AI Post Generator
+            </button>
+            <AITextGenerator
+              token={state.token}
+              onInsert={insertAIText}
+            />
+          </div>
+      
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label className="form-label">Title</label>
@@ -132,6 +147,9 @@ export default function NewPost({ onPostCreated, onEditChange }) {
                     "undo",
                     "redo",
                   ],
+                }}
+                onReady={(editor) => {
+                  editorRef.current = editor;
                 }}
                 onChange={(event, editor) => {
                   const data = editor.getData();
@@ -188,7 +206,7 @@ export default function NewPost({ onPostCreated, onEditChange }) {
               )}
             </div>
 
-            <button type="submit" className="btn btn-success w-100 btn-lg">
+            <button type="submit" className="btn btn-success w-100 btn-lg" data-bs-dismiss="modal">
               <i className="bi bi-send me-2"></i> Publish Post
             </button>
           </form>

@@ -9,6 +9,7 @@ import Footer from "../src/components/Footer";
 import { UseAuth } from "./context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App"
 
 function App() {
   const { state } = UseAuth();

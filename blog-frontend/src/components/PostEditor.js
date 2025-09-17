@@ -1,62 +1,53 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import AITextGenerator from "./AITextGenerator";
 import { UseAuth } from "../context/AuthContext";
 
-// Custom Upload Adapter
-// class CustomUploadAdapter {
-//   constructor(loader, token) {
-//     this.loader = loader;
-//     this.token = token;
-//   }
-
-//   upload() {
-//     return this.loader.file.then(
-//       (file) =>
-//         new Promise((resolve, reject) => {
-//           const data = new FormData();
-//           data.append("upload", file);
-
-//           fetch("http://127.0.0.1:8000/api/upload/", {
-//             method: "POST",
-//             headers: {
-//               Authorization: `Bearer ${this.token}`,
-//             },
-//             body: data,
-//           })
-//             .then((res) => res.json())
-//             .then((result) => resolve({ default: result.url }))
-//             .catch((err) => reject(err));
-//         })
-//     );
-//   }
-
-//   abort() {}
-// }
-
-// function CustomUploadPlugin(editor, token) {
-//   editor.plugins.get("FileRepository").createUploadAdapter = (loader) =>
-//     new CustomUploadAdapter(loader, token);
-// }
 
 export default function PostEditor({
   editForm,
   onEditChange,
   onSave,
   handleFileChange,
-  onCancel,
+  onCancel, 
 }) {
   const [content, setContent] = useState("");
   const { state } = UseAuth();
+  const editorRef = useRef(null);
 
-  const insertGeneratedText = (text) => {
-    const newContent = content + "<p>" + text + "</p>";
-    setContent(newContent);
-    onEditChange({ target: { name: "content", value: newContent } });
+  // const insertGeneratedText = (text) => {
+  //   const newContent = content + "<p>" + text + "</p>";
+  //   setContent(newContent);
+  //   onEditChange({ target: { name: "content", value: newContent } });
+  // };
+
+  const insertAIText = (text) => {
+    if (editorRef.current) {
+      const editor = editorRef.current;
+      editor.model.change((writer) => {
+        const insertPosition = editor.model.document.selection.getFirstPosition();
+        writer.insertText(text, insertPosition);
+
+        const viewFragment = editor.data.processor.toView(`
+        <div class="ai-text" style="background:#f5f7ff; padding:12px; border-left:4px solid #3f51b5; border-radius:6px; margin:8px 0;">
+          <strong>✨ AI Suggestion:</strong>
+          <p>${text}</p>
+        </div>
+      `);
+
+      const modelFragment = editor.data.toModel(viewFragment);
+      editor.model.insertContent(modelFragment, insertPosition);
+      });
+      const updatedData = editor.getData();
+      setContent(updatedData);
+      onEditChange({ target: { name: "content", value: updatedData } });
+    } else {
+      setContent((prev) => prev + "\n" + text);
+    }
   };
 
-  // Initialize CKEditor content from editForm.content
+
   useEffect(() => {
     if (editForm?.content) {
       setContent(editForm.content);
@@ -79,7 +70,7 @@ export default function PostEditor({
           >
             ✨ AI Post Generator
           </button>
-          <AITextGenerator token={state.token} onInsert={insertGeneratedText} />
+          <AITextGenerator token={state.token} onInsert={insertAIText} />
         </div>
 
         {/* Title */}
@@ -103,6 +94,9 @@ export default function PostEditor({
             key={editForm.id || "editor"}
             editor={ClassicEditor}
             data={content}
+            onReady={(editor) => {
+              editorRef.current = editor;
+            }}
             onChange={(event, editor) => {
               const data = editor.getData();
               setContent(data);
@@ -207,12 +201,13 @@ export default function PostEditor({
 
         {/* Actions */}
         <div className="d-flex justify-content-end gap-2">
-          <button type="button" className="btn btn-success" onClick={onSave}>
+          <button type="button" className="btn btn-success" data-bs-dismiss="modal" onClick={onSave}>
             <i className="bi bi-check-circle me-1"></i> Save
           </button>
           <button
             type="button"
             className="btn btn-outline-secondary"
+            data-bs-dismiss="modal"
             onClick={onCancel}
           >
             <i className="bi bi-x-circle me-1"></i> Cancel
