@@ -14,7 +14,7 @@ from .serializers import PostSerializer, CategorySerializer, CommentSerializer
 from .models import Post, Category, Comment, PostImage
 
 load_dotenv()
-client = OpenAI(api_key = os.getenv("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"))
+client = OpenAI(api_key = os.getenv("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"))
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
