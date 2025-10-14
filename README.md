@@ -1,8 +1,8 @@
 # 📰 Blog App (Django + React)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/blog-app) 
-![GitHub stars](https://img.shields.io/github/stars/yourusername/blog-app?style=social) 
-![GitHub license](https://img.shields.io/github/license/yourusername/blog-app) 
+![GitHub repo size](https://img.shields.io/github/repo-size/ShoaibJarwar/DjangoReactBlogApp) 
+![GitHub stars](https://img.shields.io/github/stars/ShoaibJarwar/DjangoReactBlogApp?style=social) 
+![GitHub license](https://img.shields.io/github/license/ShoaibJarwar/DjangoReactBlogApp) 
 
 A full-stack blog application built with **Django REST Framework (DRF)** for the backend and **React** for the frontend.  
 It includes **authentication, posts, categories, likes, comments, and a personal dashboard**.
