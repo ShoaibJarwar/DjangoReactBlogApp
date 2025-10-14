@@ -1,5 +1,9 @@
 # 📰 Blog App (Django + React)
 
+![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/blog-app) 
+![GitHub stars](https://img.shields.io/github/stars/yourusername/blog-app?style=social) 
+![GitHub license](https://img.shields.io/github/license/yourusername/blog-app) 
+
 A full-stack blog application built with **Django REST Framework (DRF)** for the backend and **React** for the frontend.  
 It includes **authentication, posts, categories, likes, comments, and a personal dashboard**.
 
@@ -10,7 +14,7 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 ### 🔐 Authentication
 - JWT-based login & signup  
 - Protected API endpoints (posts, dashboard, likes, etc.)  
-- User-specific actions (like `my_posts`)  
+- User-specific actions (`my_posts`)  
 
 ### 📝 Posts
 - Create, edit, and delete posts  
@@ -44,18 +48,27 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 
 ---
 
+## 📸 Screenshots
+
+Click on the screenshots to view full-size images:
+
+| Homepage | Blog Post | Dashboard |
+|----------|-----------|-----------|
+| [![Homepage](Images/01.png)](Images/02.png) | [![Blog Post](Images/03.png)](Images/04.png) | [![Dashboard](Images/06.png)](Images/8.png) |
+
+> **Tip:** Use `_thumb` versions as smaller images for table display. Full-size images open when clicked.
+
+---
+
 ## 🛠️ Tech Stack
 
 **Backend**
-- Python   
-- Django  
-- Django REST Framework  
-- SimpleJWT (for JWT auth)  
+- Python, Django, Django REST Framework  
+- SimpleJWT for JWT authentication  
 - SQLite  
 
 **Frontend**
-- React   
-- Context API  
+- React, Context API  
 - Fetch API for requests  
 - React-Toastify for notifications  
 
@@ -66,9 +79,8 @@ It includes **authentication, posts, categories, likes, comments, and a personal
 ### Backend (Django)
 ```bash
 # Clone repo
-git clone https://github.com/yourusername/blog-app.git
+git clone https://github.com/ShoaibJarwar/DjangoReactBlogApp.git
 cd blog-app/blogapi
-
 
 # Install dependencies
 pip install -r requirements.txt
@@ -78,63 +90,3 @@ python manage.py migrate
 
 # Start server
 python manage.py runserver
-
-
-# React Frontend
-
-cd ../blog-frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-
-
----
-
-## 🔑 API Endpoints
-
-### 🛡️ Authentication
-| Method | Endpoint                  | Description                  |
-|--------|---------------------------|------------------------------|
-| POST   | `/api/token/`             | Get access & refresh tokens  |
-| POST   | `/api/token/refresh/`     | Refresh access token         |
-
-### 📝 Posts
-| Method | Endpoint                        | Description                        |
-|--------|---------------------------------|------------------------------------|
-| GET    | `/api/posts/`                   | List all posts                     |
-| GET    | `/api/posts/?category=<id>`     | Filter posts by category           |
-| POST   | `/api/posts/`                   | Create new post (**auth required**) |
-| PUT    | `/api/posts/<id>/`              | Update post (**author only**)      |
-| DELETE | `/api/posts/<id>/`              | Delete post (**author only**)      |
-| POST   | `/api/posts/<id>/like/`         | Toggle like/unlike                 |
-| GET    | `/api/posts/my_posts/`          | List posts of current user         |
-
-### 💬 Comments
-| Method | Endpoint                     | Description               |
-|--------|------------------------------|---------------------------|
-| GET    | `/api/comments/?post=<id>`   | List comments of a post   |
-| POST   | `/api/comments/`             | Add comment to a post     |
-
-### 📊 Dashboard
-| Method | Endpoint          | Description                                  |
-|--------|------------------|----------------------------------------------|
-| GET    | `/api/dashboard/` | Fetch aggregated dashboard stats (**auth required**) |
-
----
-
-## 📌 Roadmap
-
-- ✅ **Likes & Comments** – toggle like/unlike, add comments  
-- ✅ **User Dashboard** – personal stats, my_posts, top categories  
-- ⏳ **Post Search & Sorting** – keyword search, newest/oldest sorting  
-- ⏳ **Profile Page with Avatar** – user profile & picture upload  
-
----
-
-## 📝 License
-
-This project is licensed under the **MIT License**.  
-You are free to **use, modify, and distribute** this project as you wish.  
