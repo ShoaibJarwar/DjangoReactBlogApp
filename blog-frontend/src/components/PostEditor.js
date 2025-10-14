@@ -31,7 +31,6 @@ export default function PostEditor({
 
         const viewFragment = editor.data.processor.toView(`
         <div class="ai-text" style="background:#f5f7ff; padding:12px; border-left:4px solid #3f51b5; border-radius:6px; margin:8px 0;">
-          <strong>✨ AI Suggestion:</strong>
           <p>${text}</p>
         </div>
       `);
