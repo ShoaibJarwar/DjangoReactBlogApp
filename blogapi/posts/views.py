@@ -13,8 +13,9 @@ from django.db.models.functions import Coalesce
 from .serializers import PostSerializer, CategorySerializer, CommentSerializer
 from .models import Post, Category, Comment, PostImage
 
-load_dotenv()
-client = OpenAI(api_key = os.getenv("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"))
+load_dotenv()   
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
